@@ -115,6 +115,24 @@ public class BannerAdView extends RelativeLayout {
 
 		this.webSettings = webView.getSettings();
 		this.webSettings.setJavaScriptEnabled(true);
+		// Fix scale in some device
+		this.webSettings.setSupportMultipleWindows(true);
+		this.webSettings.setLoadsImagesAutomatically(true);
+		this.webSettings.setBuiltInZoomControls(true);
+		webView.setInitialScale(100);
+		try {
+			Method m = this.webSettings.getClass().getMethod(
+					"setIsCacheDrawBitmap", boolean.class);
+			if (m != null) {
+				m.invoke(webView, false);
+				webView.getSettings().setLayoutAlgorithm(
+						WebSettings.LayoutAlgorithm.NORMAL);
+			}
+		} catch (NoSuchMethodException e) {
+		} catch (IllegalAccessException e) {
+		} catch (InvocationTargetException e) {
+		}
+		// End Fix scale in some device
 		webView.setBackgroundColor(Color.TRANSPARENT);
 		setLayer(webView);
 
